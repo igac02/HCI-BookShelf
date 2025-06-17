@@ -1,24 +1,22 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using BookShelf.Models;
+using BookShelf.Service;
+using BookShelf.Services;
+using BookShelf.ViewModel;
+using BookShelf.ViewModels;
 
-namespace BookShelf
+namespace BookShelf.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(User loggedInUser, ShoppingCartService cartService, NavigationService navigationService)
         {
             InitializeComponent();
+
+            string connectionString = "Server=localhost;Database=bookshelf;Uid=root;Pwd=root;";
+            DataAccess dataAccess = new DataAccess(connectionString);
+
+            this.DataContext = new MainViewModel(dataAccess, cartService, navigationService, loggedInUser);
         }
     }
 }

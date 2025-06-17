@@ -1,0 +1,22 @@
+﻿using System.Windows;
+using BookShelf.Services;
+using BookShelf.ViewModel;
+
+namespace BookShelf.Views
+{
+    /// <summary>
+    /// Interaction logic for AdminOrdersView.xaml
+    /// </summary>
+    public partial class AdminOrdersView : Window
+    {
+        public AdminOrdersView()
+        {
+            InitializeComponent();
+
+            string connectionString = "Server=localhost;Database=bookshelf;Uid=root;Pwd=root;";
+            DataAccess dataAccess = new DataAccess(connectionString);
+
+            this.DataContext = new AdminOrdersViewModel(dataAccess);
+        }
+    }
+}

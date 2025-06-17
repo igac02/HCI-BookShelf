@@ -1,0 +1,67 @@
+<Window x:Class="BookShelf.Views.AdminUsersView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookShelf.Views"
+        xmlns:viewModels="clr-namespace:BookShelf.ViewModels"
+        mc:Ignorable="d"
+        Title="Admin - Manage Users" Height="500" Width="800"
+        WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance Type=viewModels:AdminUsersViewModel, IsDesignTimeCreatable=True}">
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="350"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- List of Users -->
+        <DockPanel Grid.Column="0">
+            <TextBlock DockPanel.Dock="Top" Text="All Users" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+            <DataGrid ItemsSource="{Binding Users}"
+                      SelectedItem="{Binding SelectedUser}"
+                      AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding FullName}" Width="*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                    <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="LightGray"/>
+
+        <!-- Add/Edit Form -->
+        <DockPanel Grid.Column="2" Margin="10,0,0,0">
+            <TextBlock DockPanel.Dock="Top" Text="User Details" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                <Button Content="New" Command="{Binding AddNewCommand}" Width="100" Margin="0,0,10,0"/>
+                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="0,0,10,0" FontWeight="Bold"/>
+                <Button Content="Delete" Command="{Binding DeleteCommand}" Width="100" Background="IndianRed"/>
+            </StackPanel>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel DataContext="{Binding UserInForm}">
+                    <Label Content="First Name"/>
+                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+
+                    <Label Content="Last Name" Margin="0,10,0,0"/>
+                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+
+                    <Label Content="Email" Margin="0,10,0,0"/>
+                    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+
+                    <Label Content="Password (leave blank to keep unchanged)" Margin="0,10,0,0"/>
+                    <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_PasswordChanged" />
+
+                    <Label Content="Role" Margin="0,10,0,0"/>
+                    <ComboBox ItemsSource="{Binding DataContext.Roles, RelativeSource={RelativeSource AncestorType=Window}}"
+                              SelectedItem="{Binding Role}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Window>
