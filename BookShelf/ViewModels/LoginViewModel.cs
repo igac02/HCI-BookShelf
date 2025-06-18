@@ -44,8 +44,21 @@ namespace BookShelf.ViewModels
             _dataAccess = dataAccess;
             _navigationService = navigationService;
             LoginCommand = new RelayCommand(Login, CanLogin);
+
+
             // Vraćamo komandu na njenu originalnu funkcionalnost.
-            OpenRegisterCommand = new RelayCommand(p => _navigationService.ShowRegistrationWindow());
+            //OpenRegisterCommand = new RelayCommand(p => _navigationService.ShowRegistrationWindow());
+
+            OpenRegisterCommand = new RelayCommand(p =>
+            {
+                _navigationService.ShowRegistrationWindow();
+
+                if (p is Window currentWindow)
+                {
+                    currentWindow.Close(); // zatvara LoginView
+                }
+            });
+
         }
 
         private bool CanLogin(object parameter)

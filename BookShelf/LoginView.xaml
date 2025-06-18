@@ -269,7 +269,8 @@
                           Foreground="{StaticResource TextSecondaryBrush}">
                     <Run Text="New to BookShelf?"/>
                     <Hyperlink Command="{Binding OpenRegisterCommand}" 
-                              Style="{StaticResource ModernHyperlink}">
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                               Style="{StaticResource ModernHyperlink}">
                         <Run Text="Create Account"/>
                     </Hyperlink>
                 </TextBlock>

@@ -41,6 +41,7 @@ namespace BookShelf.ViewModels
         #endregion
 
         public ICommand RegisterCommand { get; }
+        public ICommand BackToLoginCommand { get; }
 
         public RegistrationViewModel()
         {
@@ -52,6 +53,16 @@ namespace BookShelf.ViewModels
             _dataAccess = dataAccess;
             _navigationService = navigationService;
             RegisterCommand = new RelayCommand(Register, CanRegister);
+
+            BackToLoginCommand = new RelayCommand(p =>
+            {
+                if (p is Window currentWindow)
+                {
+                    currentWindow.Close(); // zatvara registraciju
+                }
+
+                _navigationService.ShowLoginWindow(); // otvara login
+            });
         }
 
         private bool CanRegister(object parameter)
@@ -117,5 +128,6 @@ namespace BookShelf.ViewModels
 
 
         }
+
     }
 }
