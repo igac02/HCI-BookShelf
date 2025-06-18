@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BookShelf.Views"
         xmlns:viewModels="clr-namespace:BookShelf.ViewModels"
         mc:Ignorable="d"
-        Title="BookShelf - Create Your Account" Height="700" Width="500"
+        Title="BookShelf - Create Your Account" Height="780" Width="500"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -35,16 +35,12 @@
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                        VerticalAlignment="Center"
-                                        Margin="{TemplateBinding Padding}"/>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
@@ -62,6 +58,7 @@
             <Setter Property="Height" Value="45"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
             <Setter Property="Background" Value="White"/>
@@ -69,13 +66,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="PasswordBox">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                        VerticalAlignment="Center"
-                                        Margin="{TemplateBinding Padding}"/>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
@@ -100,10 +92,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center"/>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -128,171 +118,73 @@
     </Window.Resources>
 
     <!-- Main Container with Shadow Effect -->
-    <Border Background="{StaticResource BackgroundBrush}" 
-            CornerRadius="12"
-            Margin="20">
+    <Border Background="{StaticResource BackgroundBrush}" CornerRadius="12" Margin="20">
         <Border.Effect>
-            <DropShadowEffect Color="Black" 
-                            Opacity="0.15" 
-                            ShadowDepth="8" 
-                            BlurRadius="20"/>
+            <DropShadowEffect Color="Black" Opacity="0.15" ShadowDepth="8" BlurRadius="20"/>
         </Border.Effect>
 
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <!-- Close Button -->
+            <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="40" Margin="10"
+                    Background="Transparent" BorderThickness="0" FontSize="16"
+                    Foreground="{StaticResource TextSecondaryBrush}" Content="✕"
+                    Click="CloseButton_Click" Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#F0F0F0"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-            <!-- Header Section -->
-            <Grid Grid.Row="0" Background="{StaticResource SurfaceBrush}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Close Button -->
-                <Button Grid.Row="0" 
-                        HorizontalAlignment="Right" 
-                        VerticalAlignment="Top"
-                        Width="40" Height="40"
-                        Margin="10"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        FontSize="16"
-                        Foreground="{StaticResource TextSecondaryBrush}"
-                        Content="✕"
-                        Click="CloseButton_Click"
-                        Cursor="Hand">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" 
-                                                CornerRadius="20">
-                                            <ContentPresenter HorizontalAlignment="Center" 
-                                                            VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#F0F0F0"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-
-                <!-- Logo and Title -->
-                <StackPanel Grid.Row="1" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,30">
-                    <!-- User Icon -->
-                    <Viewbox Width="50" Height="50" Margin="0,0,0,15">
-                        <Canvas Width="24" Height="24">
-                            <Path Fill="{StaticResource SuccessBrush}" 
-                                  Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </Canvas>
-                    </Viewbox>
-
-                    <TextBlock Text="Create Your Account" 
-                               FontSize="28" 
-                               FontWeight="Light" 
-                               Foreground="{StaticResource PrimaryBrush}"
-                               HorizontalAlignment="Center"/>
-
-                    <TextBlock Text="Join thousands of book lovers today" 
-                               FontSize="14" 
-                               Foreground="{StaticResource TextSecondaryBrush}"
-                               HorizontalAlignment="Center"
-                               Margin="0,5,0,0"/>
+            <!-- Main Content Area -->
+            <StackPanel Margin="40,20,40,40">
+                <!-- Header -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,20,0,30">
+                    <TextBlock Text="Create Your Account" FontSize="28" FontWeight="Light" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Join thousands of book lovers today" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
-            </Grid>
 
-            <!-- Registration Form -->
-            <ScrollViewer Grid.Row="1" 
-                         VerticalScrollBarVisibility="Auto"
-                         Margin="40,20,40,20">
-                <StackPanel>
+                <!-- Form Fields -->
+                <Label Content="First Name" Style="{StaticResource ModernLabel}"/>
+                <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
 
-                    <!-- Name Fields Row -->
-                    <Grid Margin="0,0,0,15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Label Content="Last Name" Style="{StaticResource ModernLabel}"/>
+                <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
 
-                        <StackPanel Grid.Column="0">
-                            <Label Content="First Name" Style="{StaticResource ModernLabel}"/>
-                            <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" 
-                                     Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
+                <Label Content="Email Address" Style="{StaticResource ModernLabel}"/>
+                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
 
-                        <StackPanel Grid.Column="2">
-                            <Label Content="Last Name" Style="{StaticResource ModernLabel}"/>
-                            <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" 
-                                     Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-                    </Grid>
+                <Label Content="Password" Style="{StaticResource ModernLabel}"/>
+                <PasswordBox x:Name="PasswordBox1" PasswordChanged="PasswordBox_PasswordChanged" Style="{StaticResource ModernPasswordBox}" Margin="0,0,0,15"/>
 
-                    <!-- Email Input -->
-                    <Label Content="Email Address" Style="{StaticResource ModernLabel}"/>
-                    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource ModernTextBox}"
-                             Margin="0,0,0,15"/>
+                <Label Content="Confirm Password" Style="{StaticResource ModernLabel}"/>
+                <PasswordBox x:Name="PasswordBox2" PasswordChanged="ConfirmPasswordBox_PasswordChanged" Style="{StaticResource ModernPasswordBox}" Margin="0,0,0,25"/>
 
-                    <!-- Password Input -->
-                    <Label Content="Password" Style="{StaticResource ModernLabel}"/>
-                    <PasswordBox x:Name="PasswordBox1" 
-                                PasswordChanged="PasswordBox_PasswordChanged"
-                                Style="{StaticResource ModernPasswordBox}"
-                                Margin="0,0,0,15"/>
+                <!-- Register Button -->
+                <Button Content="Create Account" Command="{Binding RegisterCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource ModernButton}" Margin="0,0,0,20"/>
 
-                    <!-- Confirm Password Input -->
-                    <Label Content="Confirm Password" Style="{StaticResource ModernLabel}"/>
-                    <PasswordBox x:Name="PasswordBox2" 
-                                PasswordChanged="ConfirmPasswordBox_PasswordChanged"
-                                Style="{StaticResource ModernPasswordBox}"
-                                Margin="0,0,0,25"/>
-
-                    <!-- Register Button -->
-                    <Button Content="Create Account" 
-                            Command="{Binding RegisterCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                            Style="{StaticResource ModernButton}"
-                            Margin="0,0,0,20"/>
-
-                    <!-- Login Link -->
-                    <TextBlock HorizontalAlignment="Center" 
-                              FontSize="13"
-                              Foreground="{StaticResource TextSecondaryBrush}">
-                        <Run Text="Already have an account?"/>
-                        <Hyperlink Command="{Binding BackToLoginCommand}" 
-                                  Foreground="{StaticResource AccentBrush}"
-                                  TextDecorations="None">
-                            <Run Text="Sign In"/>
-                        </Hyperlink>
-                    </TextBlock>
-
-                </StackPanel>
-            </ScrollViewer>
-
-            <!-- Footer -->
-            <Border Grid.Row="2" 
-                   Background="{StaticResource SurfaceBrush}" 
-                   Height="45">
-                <TextBlock Text="By creating an account, you agree to our Terms of Service" 
-                          FontSize="11" 
-                          Foreground="{StaticResource TextSecondaryBrush}"
-                          HorizontalAlignment="Center" 
-                          VerticalAlignment="Center"/>
-            </Border>
+                <!-- Login Link -->
+                <TextBlock HorizontalAlignment="Center" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}">
+                    <Run Text="Already have an account?"/>
+                    <Hyperlink Command="{Binding BackToLoginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{StaticResource AccentBrush}" TextDecorations="None">
+                        <Run Text="Sign In"/>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
         </Grid>
     </Border>
 </Window>
