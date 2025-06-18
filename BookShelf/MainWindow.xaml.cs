@@ -18,5 +18,10 @@ namespace BookShelf.Views
 
             this.DataContext = new MainViewModel(dataAccess, cartService, navigationService, loggedInUser);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
