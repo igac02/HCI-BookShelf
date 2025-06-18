@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using BookShelf.Core;
+using BookShelf.Models;
+using BookShelf.Service;
+using BookShelf.Services;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using BookShelf.Core;
-using BookShelf.Models;
-using BookShelf.Service;
-using BookShelf.Services;
 
-namespace BookShelf.ViewModel
+namespace BookShelf.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
@@ -18,15 +18,54 @@ namespace BookShelf.ViewModel
         private readonly NavigationService _navigationService;
         private List<Book> _allBooks;
 
-        public ObservableCollection<Book> Books { get; set; }
+        #region Properties for Data Binding
+
+        // --- FIX: Full property implementation for UI notifications ---
+        private ObservableCollection<Book> _books;
+        public ObservableCollection<Book> Books
+        {
+            get => _books;
+            set { _books = value; OnPropertyChanged(); }
+        }
+
         public User LoggedInUser { get; set; }
         public bool IsAdmin => LoggedInUser?.Role == "Admin";
 
-        public string SearchText { get; set; }
-        public Category SelectedCategory { get; set; }
-        public Author SelectedAuthor { get; set; }
-        public ObservableCollection<Category> Categories { get; set; }
-        public ObservableCollection<Author> Authors { get; set; }
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set { _searchText = value; OnPropertyChanged(); ApplyFilter(); }
+        }
+
+        private Category _selectedCategory;
+        public Category SelectedCategory
+        {
+            get => _selectedCategory;
+            set { _selectedCategory = value; OnPropertyChanged(); ApplyFilter(); }
+        }
+
+        private Author _selectedAuthor;
+        public Author SelectedAuthor
+        {
+            get => _selectedAuthor;
+            set { _selectedAuthor = value; OnPropertyChanged(); ApplyFilter(); }
+        }
+
+        // --- FIX: Full property implementation for UI notifications ---
+        private ObservableCollection<Category> _categories;
+        public ObservableCollection<Category> Categories
+        {
+            get => _categories;
+            set { _categories = value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<Author> _authors;
+        public ObservableCollection<Author> Authors
+        {
+            get => _authors;
+            set { _authors = value; OnPropertyChanged(); }
+        }
 
         private Book _selectedBook;
         public Book SelectedBook
@@ -34,7 +73,9 @@ namespace BookShelf.ViewModel
             get => _selectedBook;
             set { _selectedBook = value; OnPropertyChanged(); }
         }
+        #endregion
 
+        #region Commands
         public ICommand ClearFiltersCommand { get; }
         public ICommand AddToCartCommand { get; }
         public ICommand ViewCartCommand { get; }
@@ -42,12 +83,12 @@ namespace BookShelf.ViewModel
         public ICommand OpenAdminUsersCommand { get; }
         public ICommand OpenAdminOrdersCommand { get; }
         public ICommand LogoutCommand { get; }
+        #endregion
 
         // Design-time constructor
         public MainViewModel()
         {
             if (!DesignerProperties.GetIsInDesignMode(new DependencyObject())) return;
-            // FIX: Initialize with FirstName and LastName instead of the read-only FullName
             Books = new ObservableCollection<Book> { new Book { Title = "Design-Time Book", Author = new Author { FirstName = "Design", LastName = "Author" } } };
         }
 
@@ -93,6 +134,7 @@ namespace BookShelf.ViewModel
             Authors.Insert(0, new Author { AuthorID = 0, FirstName = "All" });
             Categories.Insert(0, new Category { CategoryID = 0, Name = "All" });
         }
+
         private void ApplyFilter()
         {
             if (_allBooks == null) return;
@@ -112,14 +154,12 @@ namespace BookShelf.ViewModel
             }
             Books = new ObservableCollection<Book>(filteredBooks.ToList());
         }
+
         private void ClearFilters()
         {
             SearchText = string.Empty;
-            OnPropertyChanged(nameof(SearchText));
             SelectedCategory = null;
-            OnPropertyChanged(nameof(SelectedCategory));
             SelectedAuthor = null;
-            OnPropertyChanged(nameof(SelectedAuthor));
         }
         #endregion
     }
