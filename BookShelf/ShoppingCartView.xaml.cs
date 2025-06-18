@@ -17,5 +17,9 @@ namespace BookShelf.Views
             InitializeComponent();
             this.DataContext = new ShoppingCartViewModel(dataAccess, cartService, currentUser);
         }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Closes the current window
+        }
     }
 }

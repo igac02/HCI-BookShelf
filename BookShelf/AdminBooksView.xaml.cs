@@ -18,5 +18,10 @@ namespace BookShelf.Views
 
             this.DataContext = new AdminBooksViewModel(dataAccess);
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Zatvara trenutni prozor
+        }
     }
 }

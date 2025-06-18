@@ -18,5 +18,10 @@ namespace BookShelf.Views
 
             this.DataContext = new AdminOrdersViewModel(dataAccess);
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Closes the current window
+        }
     }
 }

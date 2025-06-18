@@ -27,6 +27,11 @@ namespace BookShelf.Views
             this.DataContext = new LoginViewModel(dataAccess, navigationService);
         }
 
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Zatvara trenutni prozor
+        }
+
         /// <summary>
         /// This event handler is a common workaround for the PasswordBox,
         /// which doesn't support direct data binding on its Password property for security reasons.

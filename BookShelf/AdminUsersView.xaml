@@ -6,62 +6,399 @@
         xmlns:local="clr-namespace:BookShelf.Views"
         xmlns:viewModels="clr-namespace:BookShelf.ViewModels"
         mc:Ignorable="d"
-        Title="Admin - Manage Users" Height="500" Width="800"
+        Title="Admin - Manage Users" Height="750" Width="1200"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
         d:DataContext="{d:DesignInstance Type=viewModels:AdminUsersViewModel, IsDesignTimeCreatable=True}">
 
-    <Grid Margin="15">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="300"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="350"/>
-        </Grid.ColumnDefinitions>
+	<Window.Resources>
+		<!-- Modern Color Palette -->
+		<SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
+		<SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
+		<SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
+		<SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
+		<SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
+		<SolidColorBrush x:Key="SurfaceBrush" Color="#F8F9FA"/>
+		<SolidColorBrush x:Key="TextPrimaryBrush" Color="#2C3E50"/>
+		<SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8D"/>
+		<SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
+		<SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
 
-        <!-- List of Users -->
-        <DockPanel Grid.Column="0">
-            <TextBlock DockPanel.Dock="Top" Text="All Users" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-            <DataGrid ItemsSource="{Binding Users}"
-                      SelectedItem="{Binding SelectedUser}"
-                      AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding FullName}" Width="*"/>
-                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                    <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DockPanel>
+		<!-- Modern Input Style -->
+		<Style x:Key="ModernTextBox" TargetType="TextBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBox">
+						<Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+							<ScrollViewer x:Name="PART_ContentHost"
+                                        VerticalAlignment="Center"
+                                        Margin="{TemplateBinding Padding}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True">
+								<Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+								<Setter Property="BorderThickness" Value="2"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="LightGray"/>
+		<!-- Modern PasswordBox Style -->
+		<Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="PasswordBox">
+						<Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+							<ScrollViewer x:Name="PART_ContentHost"
+                                        VerticalAlignment="Center"
+                                        Margin="{TemplateBinding Padding}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True">
+								<Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+								<Setter Property="BorderThickness" Value="2"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
-        <!-- Add/Edit Form -->
-        <DockPanel Grid.Column="2" Margin="10,0,0,0">
-            <TextBlock DockPanel.Dock="Top" Text="User Details" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+		<!-- Modern ComboBox Style -->
+		<Style x:Key="ModernComboBox" TargetType="ComboBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+		</Style>
 
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                <Button Content="New" Command="{Binding AddNewCommand}" Width="100" Margin="0,0,10,0"/>
-                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="0,0,10,0" FontWeight="Bold"/>
-                <Button Content="Delete" Command="{Binding DeleteCommand}" Width="100" Background="IndianRed"/>
-            </StackPanel>
+		<!-- Modern Button Styles -->
+		<Style x:Key="ModernButton" TargetType="Button">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+							<ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="#2980B9"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel DataContext="{Binding UserInForm}">
-                    <Label Content="First Name"/>
-                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+		<Style x:Key="NewButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+			<Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#219A52"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 
-                    <Label Content="Last Name" Margin="0,10,0,0"/>
-                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+		<Style x:Key="DeleteButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+			<Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#C0392B"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 
-                    <Label Content="Email" Margin="0,10,0,0"/>
-                    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+		<!-- Modern Label Style -->
+		<Style x:Key="ModernLabel" TargetType="Label">
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="FontWeight" Value="Medium"/>
+			<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+			<Setter Property="Margin" Value="0,0,0,6"/>
+		</Style>
 
-                    <Label Content="Password (leave blank to keep unchanged)" Margin="0,10,0,0"/>
-                    <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_PasswordChanged" />
+		<!-- Modern DataGrid Style -->
+		<Style x:Key="ModernDataGrid" TargetType="DataGrid">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="GridLinesVisibility" Value="None"/>
+			<Setter Property="HeadersVisibility" Value="Column"/>
+			<Setter Property="RowBackground" Value="White"/>
+			<Setter Property="AlternatingRowBackground" Value="{StaticResource SurfaceBrush}"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="RowHeight" Value="45"/>
+		</Style>
 
-                    <Label Content="Role" Margin="0,10,0,0"/>
-                    <ComboBox ItemsSource="{Binding DataContext.Roles, RelativeSource={RelativeSource AncestorType=Window}}"
-                              SelectedItem="{Binding Role}"/>
-                </StackPanel>
-            </ScrollViewer>
-        </DockPanel>
-    </Grid>
+		<!-- Modern DataGrid Cell Style -->
+		<Style x:Key="ModernDataGridCell" TargetType="DataGridCell">
+			<Setter Property="Padding" Value="15,0"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="DataGridCell">
+						<Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+							<ContentPresenter VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- Header Style -->
+		<Style x:Key="HeaderTextBlock" TargetType="TextBlock">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+			<Setter Property="Margin" Value="0,0,0,20"/>
+		</Style>
+	</Window.Resources>
+
+	<!-- Main Container with Shadow Effect -->
+	<Border Background="{StaticResource BackgroundBrush}"
+            CornerRadius="12"
+            Margin="10">
+		<Border.Effect>
+			<DropShadowEffect Color="Black"
+                            Opacity="0.15"
+                            ShadowDepth="8"
+                            BlurRadius="20"/>
+		</Border.Effect>
+
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Header Section -->
+			<Grid Grid.Row="0" Background="{StaticResource SurfaceBrush}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Title and Icon -->
+				<StackPanel Grid.Column="0"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center"
+                           Margin="30,20">
+					<!-- Users Icon -->
+					<Viewbox Width="32" Height="32" Margin="0,0,15,0">
+						<Canvas Width="24" Height="24">
+							<Path Fill="{StaticResource AccentBrush}"
+                                  Data="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+						</Canvas>
+					</Viewbox>
+
+					<StackPanel>
+						<TextBlock Text="User Management"
+                                   FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
+						<TextBlock Text="Manage user accounts and permissions"
+                                   FontSize="14"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+					</StackPanel>
+				</StackPanel>
+
+				<!-- Close Button -->
+				<Button Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Width="40" Height="40"
+                        Margin="20"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="16"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Content="✕"
+                        Click="CloseButton_Click"
+                        Cursor="Hand">
+					<Button.Style>
+						<Style TargetType="Button">
+							<Setter Property="Background" Value="Transparent"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="Button">
+										<Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+											<ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter Property="Background" Value="#F0F0F0"/>
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Button.Style>
+				</Button>
+			</Grid>
+
+			<!-- Main Content -->
+			<Grid Grid.Row="1" Margin="30">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" MinWidth="400"/>
+					<ColumnDefinition Width="20"/>
+					<ColumnDefinition Width="450"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Column 0: Users List -->
+				<Border Grid.Column="0"
+                        Background="White"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+					<DockPanel Margin="20">
+						<TextBlock DockPanel.Dock="Top"
+                                   Text="All Users"
+                                   Style="{StaticResource HeaderTextBlock}"/>
+
+						<DataGrid ItemsSource="{Binding Users}"
+                                  SelectedItem="{Binding SelectedUser}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  SelectionMode="Single"
+                                  Style="{StaticResource ModernDataGrid}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Name"
+                                                    Binding="{Binding FullName}"
+                                                    Width="*"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+								<DataGridTextColumn Header="Email"
+                                                    Binding="{Binding Email}"
+                                                    Width="*"
+                                                    CellStyle="{StaticResource ModernDataGridCell}"/>
+								<DataGridTemplateColumn Header="Role" Width="100">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<Border Background="{StaticResource SurfaceBrush}"
+                                                    CornerRadius="12"
+                                                    Padding="8,4"
+                                                    HorizontalAlignment="Center">
+												<TextBlock Text="{Binding Role}"
+                                                           FontSize="11"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                                           HorizontalAlignment="Center"/>
+											</Border>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+							</DataGrid.Columns>
+						</DataGrid>
+					</DockPanel>
+				</Border>
+
+				<!-- Column 2: User Details Form -->
+				<Border Grid.Column="2"
+                        Background="White"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+					<DockPanel Margin="20">
+						<TextBlock DockPanel.Dock="Top"
+                                   Text="User Details"
+                                   Style="{StaticResource HeaderTextBlock}"/>
+
+						<!-- Action Buttons -->
+						<StackPanel DockPanel.Dock="Bottom"
+                                   Orientation="Horizontal"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,25,0,0">
+							<Button Content="New User"
+                                    Command="{Binding AddNewCommand}"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Style="{StaticResource NewButton}"/>
+							<Button Content="Save"
+                                    Command="{Binding SaveCommand}"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Style="{StaticResource ModernButton}"/>
+							<Button Content="Delete"
+                                    Command="{Binding DeleteCommand}"
+                                    Width="100"
+                                    Style="{StaticResource DeleteButton}"/>
+						</StackPanel>
+
+						<!-- Form Fields -->
+						<ScrollViewer VerticalScrollBarVisibility="Auto">
+							<StackPanel DataContext="{Binding UserInForm}">
+								<Label Content="First Name" Style="{StaticResource ModernLabel}"/>
+								<TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+
+								<Label Content="Last Name"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+
+								<Label Content="Email"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+
+								<Label Content="Password (leave blank to keep unchanged)"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<PasswordBox x:Name="PasswordBox"
+                                             PasswordChanged="PasswordBox_PasswordChanged"
+                                             Style="{StaticResource ModernPasswordBox}"/>
+
+								<Label Content="Role"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<ComboBox ItemsSource="{Binding DataContext.Roles, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          SelectedItem="{Binding Role}"
+                                          Style="{StaticResource ModernComboBox}"/>
+							</StackPanel>
+						</ScrollViewer>
+					</DockPanel>
+				</Border>
+			</Grid>
+		</Grid>
+	</Border>
 </Window>

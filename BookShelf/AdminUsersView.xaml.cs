@@ -20,6 +20,10 @@ namespace BookShelf.Views
 
             this.DataContext = new AdminUsersViewModel(dataAccess, loggedInUser);
         }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Closes the current window
+        }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {

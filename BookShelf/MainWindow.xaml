@@ -6,82 +6,488 @@
         xmlns:viewModels="clr-namespace:BookShelf.ViewModels"
         xmlns:converters="clr-namespace:BookShelf.Converters"
         mc:Ignorable="d"
-        Title="BookShelf - Main" Height="720" Width="1280"
+        Title="BookShelf - Your Digital Library" Height="800" Width="1400"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
         d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=True}">
+
     <Window.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <!-- Modern Color Palette -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
+        <SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#F8F9FA"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8D"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
+        <SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
+        <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
+
+        <!-- Modern Input Style -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        VerticalAlignment="Center"
+                                        Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <!-- Modern Button Styles -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="8,0"/>
+            <Setter Property="Padding" Value="20,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2980B9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#219A52"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C0392B"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Modern Label Style -->
+        <Style x:Key="ModernLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+
+        <!-- Modern DataGrid Style -->
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="RowHeight" Value="50"/>
+            <Setter Property="ColumnHeaderHeight" Value="45"/>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.05" ShadowDepth="2" BlurRadius="8"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!-- Top Bar with Welcome Message and Action Buttons -->
-        <DockPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="{Binding LoggedInUser.FirstName, StringFormat='Welcome, {0}'}" FontSize="18" VerticalAlignment="Center"/>
+    <!-- Main Container with Shadow Effect -->
+    <Border Background="{StaticResource BackgroundBrush}"
+            CornerRadius="12"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="Black"
+                            Opacity="0.15"
+                            ShadowDepth="8"
+                            BlurRadius="20"/>
+        </Border.Effect>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="View Cart" Command="{Binding ViewCartCommand}" Margin="5" Padding="10,5"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal" Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Button Content="Manage Books" Command="{Binding OpenAdminBooksCommand}" Margin="5" Padding="10,5"/>
-                    <Button Content="Manage Users" Command="{Binding OpenAdminUsersCommand}" Margin="5" Padding="10,5"/>
-                    <Button Content="View Orders" Command="{Binding OpenAdminOrdersCommand}" Margin="5" Padding="10,5"/>
+            <!-- Header Section -->
+            <Grid Grid.Row="0" Background="{StaticResource SurfaceBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Welcome Section -->
+                <StackPanel Grid.Column="0"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center"
+                           Margin="30,20">
+                    <!-- Book Icon -->
+                    <Viewbox Width="32" Height="32" Margin="0,0,15,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Fill="{StaticResource AccentBrush}"
+                                  Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </Canvas>
+                    </Viewbox>
+
+                    <StackPanel>
+                        <TextBlock Text="{Binding LoggedInUser.FirstName, StringFormat='Welcome back, {0}!'}"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
+                        <TextBlock Text="Discover your next favorite book"
+                                   FontSize="14"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
                 </StackPanel>
 
-                <Button Content="Logout" Command="{Binding LogoutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="20,5,5,5" Padding="10,5" Background="LightCoral"/>
-            </StackPanel>
-        </DockPanel>
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="1"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center"
+                           Margin="30,20">
 
-        <!-- Main Content Area -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-                <!-- Filters Panel -->
-                <ColumnDefinition Width="*"/>
-                <!-- Main Content -->
-            </Grid.ColumnDefinitions>
+                    <!-- Cart Button -->
+                    <Button Command="{Binding ViewCartCommand}"
+                            Style="{StaticResource SuccessButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="White" Data="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="View Cart"/>
+                        </StackPanel>
+                    </Button>
 
-            <!-- Left Panel for Filtering -->
-            <Border Grid.Column="0" BorderBrush="LightGray" BorderThickness="0,0,1,0" Padding="10">
-                <StackPanel>
-                    <TextBlock Text="Search &amp; Filter" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <Label Content="Search by Title or Author"/>
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=300}" Padding="5"/>
-                    <Label Content="Category" Margin="0,15,0,0"/>
-                    <ComboBox ItemsSource="{Binding Categories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" Padding="5"/>
-                    <Label Content="Author" Margin="0,15,0,0"/>
-                    <ComboBox ItemsSource="{Binding Authors}" DisplayMemberPath="FullName" SelectedItem="{Binding SelectedAuthor}" Padding="5"/>
-                    <Button Content="Clear Filters" Command="{Binding ClearFiltersCommand}" Margin="0,20,0,0" Padding="5"/>
+                    <!-- Admin Buttons -->
+                    <StackPanel Orientation="Horizontal" 
+                               Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Content="Manage Books"
+                                Command="{Binding OpenAdminBooksCommand}"
+                                Style="{StaticResource ModernButton}"/>
+                        <Button Content="Manage Users"
+                                Command="{Binding OpenAdminUsersCommand}"
+                                Style="{StaticResource ModernButton}"/>
+                        <Button Content="View Orders"
+                                Command="{Binding OpenAdminOrdersCommand}"
+                                Style="{StaticResource ModernButton}"/>
+                    </StackPanel>
+
+                    <!-- Logout Button -->
+                    <Button Command="{Binding LogoutCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Style="{StaticResource DangerButton}"
+                            Margin="20,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="White" Data="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Logout"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-            </Border>
+            </Grid>
 
-            <!-- Right Panel for Book List -->
-            <Grid Grid.Column="1" Margin="10,0,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="14">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
-                        <DataGridTextColumn Header="Author" Binding="{Binding Author.FullName}" Width="200"/>
-                        <DataGridTextColumn Header="Category" Binding="{Binding Category.Name}" Width="150"/>
-                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C}}" Width="100"/>
-                        <DataGridTextColumn Header="In Stock" Binding="{Binding StockQuantity}" Width="100"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-                <DockPanel Grid.Row="1" Margin="0,10,0,0">
-                    <StatusBar DockPanel.Dock="Left">
-                        <StatusBarItem>
-                            <TextBlock Text="{Binding Books.Count, StringFormat={}{0} books found}"/>
-                        </StatusBarItem>
-                    </StatusBar>
-                    <Button DockPanel.Dock="Right" Content="Add to Cart" Command="{Binding AddToCartCommand}" Width="120" Padding="5" FontWeight="Bold"/>
-                </DockPanel>
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Panel for Filtering -->
+                <Border Grid.Column="0" Style="{StaticResource Card}">
+                    <StackPanel Margin="25">
+                        <!-- Filter Header -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="{StaticResource AccentBrush}" 
+                                          Data="M10,18A8,8 0 0,1 2,10A8,8 0 0,1 10,2A8,8 0 0,1 18,10A8,8 0 0,1 10,18M10,4A6,6 0 0,0 4,10A6,6 0 0,0 10,16A6,6 0 0,0 16,10A6,6 0 0,0 10,4M10.5,6L12,10.5L16.5,12L12,13.5L10.5,18L9,13.5L4.5,12L9,10.5L10.5,6Z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Search &amp; Filter"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Search Box -->
+                        <Label Content="Search by Title or Author" Style="{StaticResource ModernLabel}"/>
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                                 Style="{StaticResource ModernTextBox}"
+                                 Margin="0,0,0,20"/>
+
+                        <!-- Category Filter -->
+                        <Label Content="Category" Style="{StaticResource ModernLabel}"/>
+                        <ComboBox ItemsSource="{Binding Categories}"
+                                  DisplayMemberPath="Name"
+                                  SelectedItem="{Binding SelectedCategory}"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Margin="0,0,0,20"/>
+
+                        <!-- Author Filter -->
+                        <Label Content="Author" Style="{StaticResource ModernLabel}"/>
+                        <ComboBox ItemsSource="{Binding Authors}"
+                                  DisplayMemberPath="FullName"
+                                  SelectedItem="{Binding SelectedAuthor}"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Margin="0,0,0,30"/>
+
+                        <!-- Clear Filters Button -->
+                        <Button Content="Clear All Filters"
+                                Command="{Binding ClearFiltersCommand}"
+                                Style="{StaticResource ModernButton}"
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                Margin="0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Right Panel for Book List -->
+                <Border Grid.Column="2" Style="{StaticResource Card}">
+                    <Grid Margin="25">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Books Header -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                            <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="{StaticResource AccentBrush}" 
+                                          Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Book Collection"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Books DataGrid -->
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding Books}"
+                                  SelectedItem="{Binding SelectedBook}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  Style="{StaticResource ModernDataGrid}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Title"
+                                                    Binding="{Binding Title}"
+                                                    Width="*"
+                                                    HeaderStyle="{x:Null}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="15,0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Author"
+                                                    Binding="{Binding Author.FullName}"
+                                                    Width="200"
+                                                    HeaderStyle="{x:Null}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="15,0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Category"
+                                                    Binding="{Binding Category.Name}"
+                                                    Width="150"
+                                                    HeaderStyle="{x:Null}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="15,0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Price"
+                                                    Binding="{Binding Price, StringFormat={}{0:C}}"
+                                                    Width="100"
+                                                    HeaderStyle="{x:Null}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="15,0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Stock"
+                                                    Binding="{Binding StockQuantity}"
+                                                    Width="80"
+                                                    HeaderStyle="{x:Null}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="15,0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Bottom Status and Actions -->
+                        <Grid Grid.Row="2" Margin="0,20,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Status Information -->
+                            <StackPanel Grid.Column="0" 
+                                       Orientation="Horizontal" 
+                                       VerticalAlignment="Center">
+                                <Border Background="{StaticResource SurfaceBrush}"
+                                        CornerRadius="4"
+                                        Padding="12,6">
+                                    <TextBlock Text="{Binding Books.Count, StringFormat={}{0} books available}"
+                                               FontSize="13"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- Add to Cart Button -->
+                            <Button Grid.Column="1"
+                                    Command="{Binding AddToCartCommand}"
+                                    Style="{StaticResource SuccessButton}"
+                                    Width="140">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Fill="White" Data="M19 7H22V9H20V20C20 20.5 19.5 21 19 21H5C4.5 21 4 20.5 4 20V9H2V7H5V6C5 3.8 6.8 2 9 2H15C17.2 2 19 3.8 19 6V7M17 7V6C17 4.9 16.1 4 15 4H9C7.9 4 7 4.9 7 6V7H17M9 11V17H11V11H9M13 11V17H15V11H13Z"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="Add to Cart"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>

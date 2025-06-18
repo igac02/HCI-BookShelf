@@ -6,99 +6,406 @@
         xmlns:local="clr-namespace:BookShelf.Views"
         xmlns:viewModels="clr-namespace:BookShelf.ViewModels"
         mc:Ignorable="d"
-        Title="Admin - Manage Books" Height="600" Width="1000"
+        Title="BookShelf Admin - Manage Books" Height="750" Width="1200"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
         d:DataContext="{d:DesignInstance Type=viewModels:AdminBooksViewModel, IsDesignTimeCreatable=True}">
 
-    <Grid Margin="15">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="300"/>
-            <!-- Book List -->
-            <ColumnDefinition Width="Auto"/>
-            <!-- Separator -->
-            <ColumnDefinition Width="400"/>
-            <!-- Edit Form -->
-        </Grid.ColumnDefinitions>
+	<Window.Resources>
+		<!-- Modern Color Palette -->
+		<SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
+		<SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
+		<SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
+		<SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
+		<SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
+		<SolidColorBrush x:Key="SurfaceBrush" Color="#F8F9FA"/>
+		<SolidColorBrush x:Key="TextPrimaryBrush" Color="#2C3E50"/>
+		<SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8D"/>
+		<SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
+		<SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
 
-        <!-- Column 0: List of Books -->
-        <DockPanel Grid.Column="0">
-            <TextBlock DockPanel.Dock="Top" Text="All Books" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-            <DataGrid ItemsSource="{Binding Books}"
-                      SelectedItem="{Binding SelectedBook}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      SelectionMode="Single">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
-                    <DataGridTextColumn Header="Stock" Binding="{Binding StockQuantity}" Width="60"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DockPanel>
+		<!-- Modern Input Style -->
+		<Style x:Key="ModernTextBox" TargetType="TextBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBox">
+						<Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+							<ScrollViewer x:Name="PART_ContentHost"
+                                        VerticalAlignment="Center"
+                                        Margin="{TemplateBinding Padding}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True">
+								<Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+								<Setter Property="BorderThickness" Value="2"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
-        <!-- Column 1: Grid Splitter -->
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="LightGray"/>
+		<!-- Modern ComboBox Style -->
+		<Style x:Key="ModernComboBox" TargetType="ComboBox">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Padding" Value="12,0"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+		</Style>
 
-        <!-- Column 2: Add/Edit Form -->
-        <DockPanel Grid.Column="2" Margin="10,0,0,0">
-            <TextBlock DockPanel.Dock="Top" Text="Book Details" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+		<!-- Modern Button Styles -->
+		<Style x:Key="ModernButton" TargetType="Button">
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+							<ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="#2980B9"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
-            <!-- Action Buttons -->
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                <Button Content="New" Command="{Binding AddNewCommand}" Width="100" Margin="0,0,10,0"/>
-                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="0,0,10,0" FontWeight="Bold"/>
-                <Button Content="Delete" Command="{Binding DeleteCommand}" Width="100" Background="IndianRed"/>
-            </StackPanel>
+		<Style x:Key="NewButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+			<Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#219A52"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 
-            <!-- Form Fields -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel DataContext="{Binding BookInForm}">
-                    <Label Content="Title"/>
-                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
+		<Style x:Key="DeleteButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+			<Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#C0392B"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
 
-                    <Label Content="Author" Margin="0,10,0,0"/>
-                    <ComboBox ItemsSource="{Binding DataContext.Authors, RelativeSource={RelativeSource AncestorType=Window}}"
-                              DisplayMemberPath="FullName"
-                              SelectedValuePath="AuthorID"
-                              SelectedValue="{Binding AuthorID}"/>
+		<!-- Modern Label Style -->
+		<Style x:Key="ModernLabel" TargetType="Label">
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="FontWeight" Value="Medium"/>
+			<Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+			<Setter Property="Margin" Value="0,0,0,6"/>
+		</Style>
 
-                    <Label Content="Publisher" Margin="0,10,0,0"/>
-                    <ComboBox ItemsSource="{Binding DataContext.Publishers, RelativeSource={RelativeSource AncestorType=Window}}"
-                              DisplayMemberPath="Name"
-                              SelectedValuePath="PublisherID"
-                              SelectedValue="{Binding PublisherID}"/>
+		<!-- Modern DataGrid Style -->
+		<Style x:Key="ModernDataGrid" TargetType="DataGrid">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="GridLinesVisibility" Value="None"/>
+			<Setter Property="HeadersVisibility" Value="Column"/>
+			<Setter Property="RowBackground" Value="White"/>
+			<Setter Property="AlternatingRowBackground" Value="{StaticResource SurfaceBrush}"/>
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="RowHeight" Value="45"/>
+		</Style>
 
-                    <Label Content="Category" Margin="0,10,0,0"/>
-                    <ComboBox ItemsSource="{Binding DataContext.Categories, RelativeSource={RelativeSource AncestorType=Window}}"
-                              DisplayMemberPath="Name"
-                              SelectedValuePath="CategoryID"
-                              SelectedValue="{Binding CategoryID}"/>
+		<!-- Header Style -->
+		<Style x:Key="HeaderTextBlock" TargetType="TextBlock">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+			<Setter Property="Margin" Value="0,0,0,20"/>
+		</Style>
+	</Window.Resources>
 
-                    <Grid Margin="0,10,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                            <Label Content="Price"/>
-                            <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="5,0,5,0">
-                            <Label Content="Stock"/>
-                            <TextBox Text="{Binding StockQuantity, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Margin="5,0,0,0">
-                            <Label Content="Year"/>
-                            <TextBox Text="{Binding PublicationYear, UpdateSourceTrigger=PropertyChanged}" Padding="2"/>
-                        </StackPanel>
-                    </Grid>
+	<!-- Main Container with Shadow Effect -->
+	<Border Background="{StaticResource BackgroundBrush}"
+            CornerRadius="12"
+            Margin="10">
+		<Border.Effect>
+			<DropShadowEffect Color="Black"
+                            Opacity="0.15"
+                            ShadowDepth="8"
+                            BlurRadius="20"/>
+		</Border.Effect>
 
-                    <Label Content="Description" Margin="0,10,0,0"/>
-                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
-                             Height="80" TextWrapping="Wrap" AcceptsReturn="True"
-                             VerticalScrollBarVisibility="Auto" Padding="2"/>
-                </StackPanel>
-            </ScrollViewer>
-        </DockPanel>
-    </Grid>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Header Section -->
+			<Grid Grid.Row="0" Background="{StaticResource SurfaceBrush}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Title and Icon -->
+				<StackPanel Grid.Column="0"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center"
+                           Margin="30,20">
+					<!-- Books Icon -->
+					<Viewbox Width="32" Height="32" Margin="0,0,15,0">
+						<Canvas Width="24" Height="24">
+							<Path Fill="{StaticResource AccentBrush}"
+                                  Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+						</Canvas>
+					</Viewbox>
+
+					<StackPanel>
+						<TextBlock Text="Book Management"
+                                   FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
+						<TextBlock Text="Manage your book inventory and details"
+                                   FontSize="14"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+					</StackPanel>
+				</StackPanel>
+
+				<!-- Close Button -->
+				<Button Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Width="40" Height="40"
+                        Margin="20"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="16"
+                        Foreground="{StaticResource TextSecondaryBrush}"
+                        Content="✕"
+                        Click="CloseButton_Click"
+                        Cursor="Hand">
+					<Button.Style>
+						<Style TargetType="Button">
+							<Setter Property="Background" Value="Transparent"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="Button">
+										<Border Background="{TemplateBinding Background}"
+                                                CornerRadius="20">
+											<ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter Property="Background" Value="#F0F0F0"/>
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Button.Style>
+				</Button>
+			</Grid>
+
+			<!-- Main Content -->
+			<Grid Grid.Row="1" Margin="30">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" MinWidth="400"/>
+					<ColumnDefinition Width="20"/>
+					<ColumnDefinition Width="450"/>
+				</Grid.ColumnDefinitions>
+
+				<!-- Column 0: Books List -->
+				<Border Grid.Column="0"
+                        Background="White"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+					<DockPanel Margin="20">
+						<TextBlock DockPanel.Dock="Top"
+                                   Text="All Books"
+                                   Style="{StaticResource HeaderTextBlock}"/>
+
+						<DataGrid ItemsSource="{Binding Books}"
+                                  SelectedItem="{Binding SelectedBook}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  SelectionMode="Single"
+                                  Style="{StaticResource ModernDataGrid}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Title"
+                                                    Binding="{Binding Title}"
+                                                    Width="*"
+                                                    HeaderStyle="{x:Null}">
+									<DataGridTextColumn.CellStyle>
+										<Style TargetType="DataGridCell">
+											<Setter Property="Padding" Value="15,0"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="DataGridCell">
+														<Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+															<ContentPresenter VerticalAlignment="Center"/>
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</DataGridTextColumn.CellStyle>
+								</DataGridTextColumn>
+								<DataGridTextColumn Header="Stock"
+                                                    Binding="{Binding StockQuantity}"
+                                                    Width="80"
+                                                    HeaderStyle="{x:Null}">
+									<DataGridTextColumn.CellStyle>
+										<Style TargetType="DataGridCell">
+											<Setter Property="Padding" Value="15,0"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="DataGridCell">
+														<Border Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+															<ContentPresenter VerticalAlignment="Center"/>
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</DataGridTextColumn.CellStyle>
+								</DataGridTextColumn>
+							</DataGrid.Columns>
+						</DataGrid>
+					</DockPanel>
+				</Border>
+
+				<!-- Column 2: Book Details Form -->
+				<Border Grid.Column="2"
+                        Background="White"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+					<DockPanel Margin="20">
+						<TextBlock DockPanel.Dock="Top"
+                                   Text="Book Details"
+                                   Style="{StaticResource HeaderTextBlock}"/>
+
+						<!-- Action Buttons -->
+						<StackPanel DockPanel.Dock="Bottom"
+                                   Orientation="Horizontal"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,25,0,0">
+							<Button Content="New Book"
+                                    Command="{Binding AddNewCommand}"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Style="{StaticResource NewButton}"/>
+							<Button Content="Save"
+                                    Command="{Binding SaveCommand}"
+                                    Width="100"
+                                    Margin="0,0,10,0"
+                                    Style="{StaticResource ModernButton}"/>
+							<Button Content="Delete"
+                                    Command="{Binding DeleteCommand}"
+                                    Width="100"
+                                    Style="{StaticResource DeleteButton}"/>
+						</StackPanel>
+
+						<!-- Form Fields -->
+						<ScrollViewer VerticalScrollBarVisibility="Auto">
+							<StackPanel DataContext="{Binding BookInForm}">
+								<Label Content="Title" Style="{StaticResource ModernLabel}"/>
+								<TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+
+								<Label Content="Author"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<ComboBox ItemsSource="{Binding DataContext.Authors, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          DisplayMemberPath="FullName"
+                                          SelectedValuePath="AuthorID"
+                                          SelectedValue="{Binding AuthorID}"
+                                          Style="{StaticResource ModernComboBox}"/>
+
+								<Label Content="Publisher"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<ComboBox ItemsSource="{Binding DataContext.Publishers, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="PublisherID"
+                                          SelectedValue="{Binding PublisherID}"
+                                          Style="{StaticResource ModernComboBox}"/>
+
+								<Label Content="Category"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<ComboBox ItemsSource="{Binding DataContext.Categories, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="CategoryID"
+                                          SelectedValue="{Binding CategoryID}"
+                                          Style="{StaticResource ModernComboBox}"/>
+
+								<Grid Margin="0,15,0,0">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="*"/>
+									</Grid.ColumnDefinitions>
+									<StackPanel Grid.Column="0" Margin="0,0,8,0">
+										<Label Content="Price" Style="{StaticResource ModernLabel}"/>
+										<TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
+                                                 Style="{StaticResource ModernTextBox}"/>
+									</StackPanel>
+									<StackPanel Grid.Column="1" Margin="4,0">
+										<Label Content="Stock" Style="{StaticResource ModernLabel}"/>
+										<TextBox Text="{Binding StockQuantity, UpdateSourceTrigger=PropertyChanged}"
+                                                 Style="{StaticResource ModernTextBox}"/>
+									</StackPanel>
+									<StackPanel Grid.Column="2" Margin="8,0,0,0">
+										<Label Content="Year" Style="{StaticResource ModernLabel}"/>
+										<TextBox Text="{Binding PublicationYear, UpdateSourceTrigger=PropertyChanged}"
+                                                 Style="{StaticResource ModernTextBox}"/>
+									</StackPanel>
+								</Grid>
+
+								<Label Content="Description"
+                                       Style="{StaticResource ModernLabel}"
+                                       Margin="0,15,0,6"/>
+								<TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="100"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         Style="{StaticResource ModernTextBox}"
+                                         VerticalContentAlignment="Top"
+                                         Padding="12,10"/>
+							</StackPanel>
+						</ScrollViewer>
+					</DockPanel>
+				</Border>
+			</Grid>
+		</Grid>
+	</Border>
 </Window>

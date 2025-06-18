@@ -17,6 +17,12 @@ namespace BookShelf.Views
             this.DataContext = new RegistrationViewModel(dataAccess, navigationService);
         }
 
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Closes the current window
+        }
+
+
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is RegistrationViewModel viewModel)
