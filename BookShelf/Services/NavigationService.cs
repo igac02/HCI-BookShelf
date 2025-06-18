@@ -22,6 +22,15 @@ namespace BookShelf.Services
             _dataAccess = new DataAccess(ConnectionString);
         }
 
+        /// <summary>
+        /// Opens the new Book Details window for the selected book.
+        /// </summary>
+        public void ShowBookDetailsWindow(Book book, User currentUser)
+        {
+            var detailsView = new BookDetailsView(book, currentUser);
+            detailsView.ShowDialog();
+        }
+
         public void ShowMainWindow(User loggedInUser, Window currentWindowToClose)
         {
             var mainWindow = new MainWindow(loggedInUser, _cartService, this);

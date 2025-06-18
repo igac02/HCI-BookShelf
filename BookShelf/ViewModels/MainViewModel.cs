@@ -79,6 +79,7 @@ namespace BookShelf.ViewModels
         public ICommand ClearFiltersCommand { get; }
         public ICommand AddToCartCommand { get; }
         public ICommand ViewCartCommand { get; }
+        public ICommand ViewDetailsCommand { get; } // New Command
         public ICommand OpenAdminBooksCommand { get; }
         public ICommand OpenAdminUsersCommand { get; }
         public ICommand OpenAdminOrdersCommand { get; }
@@ -108,8 +109,19 @@ namespace BookShelf.ViewModels
             OpenAdminOrdersCommand = new RelayCommand(p => _navigationService.ShowAdminOrders());
             LogoutCommand = new RelayCommand(p => Logout(p as Window));
 
+            // Initialize the new command
+            ViewDetailsCommand = new RelayCommand(p => ViewBookDetails(), p => CanViewBookDetails());
+
             LoadData();
         }
+
+        // Methods for the new command
+        private bool CanViewBookDetails() => SelectedBook != null;
+        private void ViewBookDetails()
+        {
+            _navigationService.ShowBookDetailsWindow(SelectedBook, LoggedInUser);
+        }
+
 
         private bool CanAddToCart() => SelectedBook != null && SelectedBook.StockQuantity > 0;
         private void AddToCart()
