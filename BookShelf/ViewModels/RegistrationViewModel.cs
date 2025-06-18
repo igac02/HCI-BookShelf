@@ -115,6 +115,8 @@ namespace BookShelf.ViewModels
 
                 MessageBox.Show("Registration successful! You can now log in.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                _navigationService.ShowMainWindow(newUser, parameter as Window); // Open main window with the new user  
+
                 // Close the registration window
                 (parameter as Window)?.Close();
             }

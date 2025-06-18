@@ -191,7 +191,7 @@
                 <!-- Login Link -->
                 <TextBlock HorizontalAlignment="Center" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}">
                     <Run Text="Already have an account?"/>
-                    <Hyperlink Command="{Binding BackToLoginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{StaticResource AccentBrush}" TextDecorations="None">
+                    <Hyperlink Command="{Binding BackToLoginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Foreground="{StaticResource AccentBrush}">
                         <Run Text="Sign In"/>
                     </Hyperlink>
                 </TextBlock>
