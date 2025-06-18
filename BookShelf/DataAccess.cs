@@ -237,6 +237,46 @@ namespace BookShelf.Services
             }
         }
 
+        public List<Order> GetAllOrders()
+        {
+            using (IDbConnection db = GetConnection())
+            {
+                string sql = @"
+                    SELECT 
+                        o.*, 
+                        u.*, 
+                        oi.*, 
+                        b.*
+                    FROM Orders o
+                    JOIN Users u ON o.UserID = u.UserID
+                    JOIN OrderItems oi ON o.OrderID = oi.OrderID
+                    JOIN Books b ON oi.BookID = b.BookID
+                    ORDER BY o.OrderDate DESC;";
+
+                var orderLookup = new Dictionary<int, Order>();
+
+                db.Query<Order, User, OrderItem, Book, Order>(
+                    sql,
+                    (order, user, orderItem, book) =>
+                    {
+                        if (!orderLookup.TryGetValue(order.OrderID, out Order currentOrder))
+                        {
+                            currentOrder = order;
+                            currentOrder.User = user;
+                            currentOrder.OrderItems = new List<OrderItem>();
+                            orderLookup.Add(currentOrder.OrderID, currentOrder);
+                        }
+
+                        orderItem.Book = book;
+                        currentOrder.OrderItems.Add(orderItem);
+                        return currentOrder;
+                    },
+                    splitOn: "UserID,OrderItemID,BookID"
+                );
+                return orderLookup.Values.ToList();
+            }
+        }
+
         #endregion
 
         #region Order and Review Methods

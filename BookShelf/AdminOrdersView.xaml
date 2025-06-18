@@ -44,7 +44,17 @@
 
             <GroupBox DockPanel.Dock="Top" Header="Customer Info" Padding="5">
                 <StackPanel>
-                    <TextBlock><Run Text="Name: "/><Run Text="{Binding User.FullName}" FontWeight="SemiBold"/></TextBlock>
+					<TextBlock>
+						<Run Text="Name: "/>
+						<Run FontWeight="SemiBold">
+							<Run.Text>
+								<MultiBinding StringFormat="{}{0} {1}">
+									<Binding Path="User.FirstName"/>
+									<Binding Path="User.LastName"/>
+								</MultiBinding>
+							</Run.Text>
+						</Run>
+					</TextBlock>
                     <TextBlock Margin="0,5,0,0"><Run Text="Email: "/><Run Text="{Binding User.Email}" FontWeight="SemiBold"/></TextBlock>
                 </StackPanel>
             </GroupBox>

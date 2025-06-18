@@ -47,6 +47,7 @@ namespace BookShelf.Models
         public int UserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
         public string Email { get; set; }
         public string PasswordHash { get; set; } // We will never store the actual password
         public string Role { get; set; } // e.g., "Admin", "Customer"

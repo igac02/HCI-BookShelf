@@ -5,7 +5,7 @@ using BookShelf.Core;
 using BookShelf.Models;
 using BookShelf.Services;
 
-namespace BookShelf.ViewModel
+namespace BookShelf.ViewModels
 {
     public class AdminOrdersViewModel : ViewModelBase
     {
@@ -63,7 +63,7 @@ namespace BookShelf.ViewModel
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject())) return;
 
-            Orders = new ObservableCollection<Order>(_dataAccess.GetOrders());
+            Orders = new ObservableCollection<Order>(_dataAccess.GetAllOrders());
         }
     }
 }

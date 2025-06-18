@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using BookShelf.Services;
-using BookShelf.ViewModel;
+using BookShelf.ViewModels;
 
 namespace BookShelf.Views
 {
