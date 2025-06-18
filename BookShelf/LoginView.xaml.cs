@@ -20,7 +20,7 @@ namespace BookShelf.Views
 
             // This is the crucial part: connecting the View to the ViewModel.
             // In a real-world application, the connection string would come from a config file.
-            string connectionString = "Server=localhost;Database=bookshelf;Uid=root;Pwd=root;";
+            string connectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
             DataAccess dataAccess = new DataAccess(connectionString);
 
             // Set the DataContext of this window to a new instance of LoginViewModel.

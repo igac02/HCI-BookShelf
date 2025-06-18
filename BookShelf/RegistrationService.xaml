@@ -8,8 +8,7 @@
         mc:Ignorable="d"
         Title="Register New Account" Height="550" Width="450"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        d:DataContext="{d:DesignInstance Type=viewModels:RegistrationViewModel, IsDesignTimeCreatable=True}">
+        ResizeMode="NoResize">
 
     <Grid Margin="15">
         <Grid.RowDefinitions>

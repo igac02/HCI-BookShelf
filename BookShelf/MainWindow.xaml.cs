@@ -13,7 +13,7 @@ namespace BookShelf.Views
         {
             InitializeComponent();
 
-            string connectionString = "Server=localhost;Database=bookshelf;Uid=root;Pwd=root;";
+            string connectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
             DataAccess dataAccess = new DataAccess(connectionString);
 
             this.DataContext = new MainViewModel(dataAccess, cartService, navigationService, loggedInUser);

@@ -14,7 +14,7 @@ namespace BookShelf.Services
         private readonly ShoppingCartService _cartService;
         private readonly DataAccess _dataAccess;
 
-        private const string ConnectionString = "Server=localhost;Database=bookshelf;id=root;Pwd=root;";
+        private const string ConnectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
 
         public NavigationService(ShoppingCartService cartService)
         {
