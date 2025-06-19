@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Configuration;
 using BookShelf.Models;
 using BookShelf.Service;
 using BookShelf.Services;
@@ -13,13 +14,18 @@ namespace BookShelf.Views
         {
             InitializeComponent();
 
-            string connectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
+            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
             DataAccess dataAccess = new DataAccess(connectionString);
 
             this.DataContext = new MainViewModel(dataAccess, cartService, navigationService, loggedInUser);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BooksDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
 
         }

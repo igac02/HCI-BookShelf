@@ -406,7 +406,7 @@
                                   SelectedItem="{Binding SelectedBook}"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
-                                  Style="{StaticResource ModernDataGrid}">
+                                  Style="{StaticResource ModernDataGrid}" SelectionChanged="BooksDataGrid_SelectionChanged">
                             <!-- Dodavanje input bindinga za double-click -->
                             <DataGrid.InputBindings>
                                 <MouseBinding MouseAction="LeftDoubleClick" 

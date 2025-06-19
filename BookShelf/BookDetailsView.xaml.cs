@@ -1,7 +1,8 @@
-﻿using System.Windows;
-using BookShelf.Models;
+﻿using BookShelf.Models;
 using BookShelf.Services;
 using BookShelf.ViewModels;
+using System.Configuration;
+using System.Windows;
 
 namespace BookShelf.Views
 {
@@ -14,7 +15,7 @@ namespace BookShelf.Views
         {
             InitializeComponent();
 
-            string connectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
+            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString; 
             DataAccess dataAccess = new DataAccess(connectionString);
 
             this.DataContext = new BookDetailsViewModel(book, currentUser, dataAccess);

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BookShelf.Service;
+using BookShelf.Services;
+using BookShelf.ViewModels;
+using System;
+using System.Configuration;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using BookShelf.Service;
-using BookShelf.Services;
-using BookShelf.ViewModels;
 
 namespace BookShelf.Views
 {
@@ -20,7 +21,7 @@ namespace BookShelf.Views
 
             // This is the crucial part: connecting the View to the ViewModel.
             // In a real-world application, the connection string would come from a config file.
-            string connectionString = "Server=localhost;Port=3306;Database=bookshelf;Uid=root;Pwd=root;";
+            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
             DataAccess dataAccess = new DataAccess(connectionString);
 
             // Set the DataContext of this window to a new instance of LoginViewModel.
