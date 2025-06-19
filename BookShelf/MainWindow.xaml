@@ -28,6 +28,7 @@
         <SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
         <SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
         <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="InfoBrush" Color="#17A2B8"/>
 
         <!-- Modern Input Style -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
@@ -114,6 +115,15 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#C0392B"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="InfoButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource InfoBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#138496"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -341,11 +351,18 @@
 
                         <!-- Books DataGrid -->
                         <DataGrid Grid.Row="1"
+                                  x:Name="BooksDataGrid"
                                   ItemsSource="{Binding Books}"
                                   SelectedItem="{Binding SelectedBook}"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   Style="{StaticResource ModernDataGrid}">
+                            <!-- Dodavanje input bindinga za double-click -->
+                            <DataGrid.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick" 
+                                            Command="{Binding ViewDetailsCommand}"/>
+                            </DataGrid.InputBindings>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Title"
                                                     Binding="{Binding Title}"
@@ -475,20 +492,37 @@
                                 </Border>
                             </StackPanel>
 
-                            <!-- Add to Cart Button -->
-                            <Button Grid.Column="1"
-                                    Command="{Binding AddToCartCommand}"
-                                    Style="{StaticResource SuccessButton}"
-                                    Width="140">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox Width="16" Height="16" Margin="0,0,8,0">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Fill="White" Data="M19 7H22V9H20V20C20 20.5 19.5 21 19 21H5C4.5 21 4 20.5 4 20V9H2V7H5V6C5 3.8 6.8 2 9 2H15C17.2 2 19 3.8 19 6V7M17 7V6C17 4.9 16.1 4 15 4H9C7.9 4 7 4.9 7 6V7H17M9 11V17H11V11H9M13 11V17H15V11H13Z"/>
-                                        </Canvas>
-                                    </Viewbox>
-                                    <TextBlock Text="Add to Cart"/>
-                                </StackPanel>
-                            </Button>
+                            <!-- Action Buttons -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <!-- View Details Button -->
+                                <Button Command="{Binding ViewDetailsCommand}"
+                                        Style="{StaticResource InfoButton}"
+                                        Width="120"
+                                        Margin="0,0,10,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="White" Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,17A1.5,1.5 0 0,1 10.5,15.5A1.5,1.5 0 0,1 12,14A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 12,17M12,10.5C10.8,10.5 9.5,11.5 9.5,13H11C11,12.5 11.2,12 12,12C12.8,12 13,12.5 13,13C13,13.5 12.5,14 12,14H11V16H12.5C13,16 13.5,15.5 13.5,15V14.5C14.5,14 15,13 15,12C15,10.5 13.5,9.5 12,9.5V10.5Z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="View Details"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Add to Cart Button -->
+                                <Button Command="{Binding AddToCartCommand}"
+                                        Style="{StaticResource SuccessButton}"
+                                        Width="140">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="16" Height="16" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="White" Data="M19 7H22V9H20V20C20 20.5 19.5 21 19 21H5C4.5 21 4 20.5 4 20V9H2V7H5V6C5 3.8 6.8 2 9 2H15C17.2 2 19 3.8 19 6V7M17 7V6C17 4.9 16.1 4 15 4H9C7.9 4 7 4.9 7 6V7H17M9 11V17H11V11H9M13 11V17H15V11H13Z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="Add to Cart"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                 </Border>

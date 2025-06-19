@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShelf.Core;
+using System;
 using System.Collections.Generic;
 
 // All classes are within the BookShelf.Models namespace
@@ -84,20 +85,24 @@ namespace BookShelf.Models
     /// <summary>
     /// Represents an Order from the Orders table.
     /// </summary>
-    public class Order
+    public class Order : ViewModelBase // <-- NASLIJEDITE ViewModelBase
     {
         public int OrderID { get; set; }
         public DateTime OrderDate { get; set; }
-        public string Status { get; set; }
         public decimal TotalPrice { get; set; }
+
+        private string _status;
+        public string Status
+        {
+            get => _status;
+            set { _status = value; OnPropertyChanged(); } // <-- OnPropertyChanged OBAVEZAN!
+        }
 
         // Foreign Key
         public int UserID { get; set; }
 
         // Navigation Property
         public User User { get; set; }
-
-        // A list of all items within this order
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 

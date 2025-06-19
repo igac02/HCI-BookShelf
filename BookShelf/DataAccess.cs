@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BookShelf.Models; // We need to use our model classes
+using Dapper; // This comes from the Dapper NuGet package
+using MySql.Data.MySqlClient; // This comes from the MySql.Data NuGet package
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using BookShelf.Models; // We need to use our model classes
-using Dapper; // This comes from the Dapper NuGet package
-using MySql.Data.MySqlClient; // This comes from the MySql.Data NuGet package
+using System.Windows;
 
 namespace BookShelf.Services
 {
@@ -188,6 +189,37 @@ namespace BookShelf.Services
         #endregion
 
         #region Lookup (Šifarnici) Methods
+
+
+        // Unutar DataAccess.cs klase
+
+        /// <summary>
+        /// Ažurira status određene narudžbe u bazi podataka.
+        /// </summary>
+        /// <param name="orderId">ID narudžbe koja se mijenja.</param>
+        /// <param name="newStatus">Novi status (npr. "Completed", "Cancelled").</param>
+        public void UpdateOrderStatus(int orderId, string newStatus)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "UPDATE Orders SET Status = @Status WHERE OrderID = @OrderID;";
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Status", newStatus);
+                        command.Parameters.AddWithValue("@OrderID", orderId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Ovdje možete dodati logiranje greške ako želite
+                    MessageBox.Show($"An error occurred while updating the order status: {ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
 
         /// <summary>
         /// Retrieves a list of all authors from the database.

@@ -113,7 +113,7 @@ namespace BookShelf.ViewModels
 
                 _dataAccess.InsertUser(newUser);
 
-                MessageBox.Show("Registration successful! You can now log in.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Registration successful! Welcome!.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 _navigationService.ShowMainWindow(newUser, parameter as Window); // Open main window with the new user  
 
