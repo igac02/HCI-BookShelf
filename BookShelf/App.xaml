@@ -2,12 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BookShelf">
-    <!-- 
-    The 'StartupUri' property has been REMOVED.
-    The application's startup logic is now handled entirely within App.xaml.cs,
-    which allows us to show the LoginView first.
-    -->
-    <Application.Resources>
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 
+                Ovdje spajamo fajlove sa temama.
+                Ova linija postavlja 'LightTheme.xaml' kao početnu, podrazumijevanu temu aplikacije.
+                Naš ThemeManager će kasnije dinamički mijenjati ovaj izvor (Source).
+                -->
+                <ResourceDictionary Source="/Themes/LightTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

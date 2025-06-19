@@ -1,4 +1,5 @@
 ﻿using BookShelf.Core;
+using BookShelf.Services;
 using System;
 using System.Collections.Generic;
 
@@ -53,6 +54,16 @@ namespace BookShelf.Models
         public string PasswordHash { get; set; } // We will never store the actual password
         public string Role { get; set; } // e.g., "Admin", "Customer"
         public DateTime RegistrationDate { get; set; }
+
+        // Nova property za čuvanje preference teme
+        public string PreferredTheme { get; set; } = "Light"; // Default theme
+
+        // Helper property za lakše rukovanje
+        public ThemeType PreferredThemeType
+        {
+            get => Enum.TryParse<ThemeType>(PreferredTheme, out var theme) ? theme : ThemeType.Light;
+            set => PreferredTheme = value.ToString();
+        }
     }
 
     /// <summary>

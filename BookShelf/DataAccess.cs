@@ -114,13 +114,60 @@ namespace BookShelf.Services
 
         /// <summary>
         /// Retrieves a user by their email address. Useful for the login process.
+        /// Updated to include PreferredTheme.
         /// </summary>
         public User GetUserByEmail(string email)
         {
             using (IDbConnection db = GetConnection())
             {
-                string sql = "SELECT * FROM Users WHERE Email = @UserEmail";
-                return db.QueryFirstOrDefault<User>(sql, new { UserEmail = email });
+                string sql = "SELECT UserID, FirstName, LastName, Email, PasswordHash, Role, RegistrationDate, PreferredTheme FROM Users WHERE Email = @UserEmail";
+                var user = db.QueryFirstOrDefault<User>(sql, new { UserEmail = email });
+
+                // Set default theme if null
+                if (user != null && string.IsNullOrEmpty(user.PreferredTheme))
+                {
+                    user.PreferredTheme = "Light";
+                }
+
+                return user;
+            }
+        }
+
+        /// <summary>
+        /// Dobija korisnika po ID-u uključujući i theme preference
+        /// </summary>
+        /// <param name="userId">ID korisnika</param>
+        /// <returns>User objekat ili null ako ne postoji</returns>
+        public User GetUserById(int userId)
+        {
+            using (IDbConnection db = GetConnection())
+            {
+                string sql = "SELECT UserID, FirstName, LastName, Email, PasswordHash, Role, RegistrationDate, PreferredTheme FROM Users WHERE UserID = @UserId";
+                var user = db.QueryFirstOrDefault<User>(sql, new { UserId = userId });
+
+                // Set default theme if null
+                if (user != null && string.IsNullOrEmpty(user.PreferredTheme))
+                {
+                    user.PreferredTheme = "Light";
+                }
+
+                return user;
+            }
+        }
+
+        /// <summary>
+        /// Ažurira korisničku preference teme
+        /// </summary>
+        /// <param name="userId">ID korisnika</param>
+        /// <param name="theme">Nova tema (Light, Dark, Crazy)</param>
+        /// <returns>True ako je uspešno ažurirano</returns>
+        public bool UpdateUserThemePreference(int userId, string theme)
+        {
+            using (IDbConnection db = GetConnection())
+            {
+                string sql = "UPDATE Users SET PreferredTheme = @Theme WHERE UserID = @UserId";
+                int rowsAffected = db.Execute(sql, new { Theme = theme, UserId = userId });
+                return rowsAffected > 0;
             }
         }
 
@@ -189,9 +236,6 @@ namespace BookShelf.Services
         #endregion
 
         #region Lookup (Šifarnici) Methods
-
-
-        // Unutar DataAccess.cs klase
 
         /// <summary>
         /// Ažurira status određene narudžbe u bazi podataka.

@@ -16,19 +16,21 @@
     <Window.Resources>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-        <!-- Modern Color Palette -->
+        <!-- Modern Color Palette - Updated to use theme-aware resources -->
         <SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
         <SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
         <SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
         <SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="SurfaceBrush" Color="#F8F9FA"/>
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#2C3E50"/>
-        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8D"/>
-        <SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
-        <SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
-        <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="InfoBrush" Color="#17A2B8"/>
+
+        <!-- Theme-aware brushes that will be overridden by theme dictionaries -->
+        <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource PrimaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource SecondaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource PrimaryTextColor}"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource SecondaryTextColor}"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}"/>
+        <SolidColorBrush x:Key="CardBrush" Color="{DynamicResource PrimaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
 
         <!-- Modern Input Style -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
@@ -37,7 +39,7 @@
             <Setter Property="Padding" Value="12,0"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
             <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -68,7 +70,7 @@
             <Setter Property="Padding" Value="12,0"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
             <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
         </Style>
 
@@ -128,6 +130,34 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Theme Toggle Button Style -->
+        <Style x:Key="ThemeToggleButton" TargetType="Button">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Modern Label Style -->
         <Style x:Key="ModernLabel" TargetType="Label">
             <Setter Property="FontSize" Value="13"/>
@@ -138,16 +168,17 @@
 
         <!-- Modern DataGrid Style -->
         <Style x:Key="ModernDataGrid" TargetType="DataGrid">
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="HeadersVisibility" Value="Column"/>
-            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="RowBackground" Value="{StaticResource CardBrush}"/>
             <Setter Property="AlternatingRowBackground" Value="{StaticResource SurfaceBrush}"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="RowHeight" Value="50"/>
             <Setter Property="ColumnHeaderHeight" Value="45"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
         </Style>
 
         <!-- Card Style -->
@@ -205,7 +236,7 @@
                         <TextBlock Text="{Binding LoggedInUser.FirstName, StringFormat='Welcome back, {0}!'}"
                                    FontSize="20"
                                    FontWeight="SemiBold"
-                                   Foreground="{StaticResource PrimaryBrush}"/>
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
                         <TextBlock Text="Discover your next favorite book"
                                    FontSize="14"
                                    Foreground="{StaticResource TextSecondaryBrush}"/>
@@ -217,6 +248,25 @@
                            Orientation="Horizontal"
                            VerticalAlignment="Center"
                            Margin="30,20">
+
+                    <!-- ILI zadržite postojeći toggle button koji će ciklično menjati teme -->
+                    <Button Command="{Binding ToggleThemeCommand}"
+        Style="{StaticResource ThemeToggleButton}"
+        ToolTip="Promeni temu (Light → Dark → Crazy)"
+        Margin="0,0,15,0">
+                        <StackPanel>
+                            <Viewbox Width="16" Height="16">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="{StaticResource TextPrimaryBrush}" 
+                      Data="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.4 6.35,17.41C9.37,20.43 14,20.54 17.33,17.97Z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="{Binding CurrentTheme}" 
+                   FontSize="8" 
+                   HorizontalAlignment="Center" 
+                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                    </Button>
 
                     <!-- Cart Button -->
                     <Button Width="90"
@@ -289,7 +339,7 @@
                             <TextBlock Text="Search &amp; Filter"
                                        FontSize="16"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource PrimaryBrush}"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
 
@@ -345,7 +395,7 @@
                             <TextBlock Text="Book Collection"
                                        FontSize="16"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource PrimaryBrush}"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
 
@@ -372,6 +422,8 @@
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="Padding" Value="15,0"/>
                                             <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="DataGridCell">
@@ -393,6 +445,8 @@
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="Padding" Value="15,0"/>
                                             <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="DataGridCell">
@@ -414,6 +468,8 @@
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="Padding" Value="15,0"/>
                                             <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="DataGridCell">
@@ -435,6 +491,8 @@
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="Padding" Value="15,0"/>
                                             <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="DataGridCell">
@@ -456,6 +514,8 @@
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="Padding" Value="15,0"/>
                                             <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="DataGridCell">

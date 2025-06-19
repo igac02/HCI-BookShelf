@@ -16,6 +16,7 @@ namespace BookShelf.ViewModels
         private readonly DataAccess _dataAccess;
         private readonly ShoppingCartService _cartService;
         private readonly NavigationService _navigationService;
+        private readonly ThemeManager _themeManager;
         private List<Book> _allBooks;
 
         #region Properties for Data Binding
@@ -73,17 +74,81 @@ namespace BookShelf.ViewModels
             get => _selectedBook;
             set { _selectedBook = value; OnPropertyChanged(); }
         }
+
+        // Theme properties - modified to save to database when changed
+        private ThemeType _currentTheme = ThemeType.Light;
+        public ThemeType CurrentTheme
+        {
+            get => _currentTheme;
+            set
+            {
+                if (_currentTheme != value)
+                {
+                    _currentTheme = value;
+                    OnPropertyChanged();
+                    _themeManager.SetTheme(value);
+
+                    // Sačuvaj preference teme u bazu podataka
+                    SaveThemePreference(value);
+
+                    // Notify theme-related properties
+                    OnPropertyChanged(nameof(IsLightTheme));
+                    OnPropertyChanged(nameof(IsDarkTheme));
+                    OnPropertyChanged(nameof(IsCrazyTheme));
+                }
+            }
+        }
+
+        // Properties for radio buttons or UI binding
+        public bool IsLightTheme
+        {
+            get => CurrentTheme == ThemeType.Light;
+            set
+            {
+                if (value) CurrentTheme = ThemeType.Light;
+            }
+        }
+
+        public bool IsDarkTheme
+        {
+            get => CurrentTheme == ThemeType.Dark;
+            set
+            {
+                if (value) CurrentTheme = ThemeType.Dark;
+            }
+        }
+
+        public bool IsCrazyTheme
+        {
+            get => CurrentTheme == ThemeType.Crazy;
+            set
+            {
+                if (value) CurrentTheme = ThemeType.Crazy;
+            }
+        }
+
+        // Available themes for ComboBox
+        public ObservableCollection<ThemeType> AvailableThemes { get; } = new ObservableCollection<ThemeType>
+        {
+            ThemeType.Light,
+            ThemeType.Dark,
+            ThemeType.Crazy
+        };
         #endregion
 
         #region Commands
         public ICommand ClearFiltersCommand { get; }
         public ICommand AddToCartCommand { get; }
         public ICommand ViewCartCommand { get; }
-        public ICommand ViewDetailsCommand { get; } // New Command
+        public ICommand ViewDetailsCommand { get; }
         public ICommand OpenAdminBooksCommand { get; }
         public ICommand OpenAdminUsersCommand { get; }
         public ICommand OpenAdminOrdersCommand { get; }
         public ICommand LogoutCommand { get; }
+        public ICommand ToggleThemeCommand { get; } // Zadržano za kompatibilnost
+        public ICommand SetLightThemeCommand { get; }
+        public ICommand SetDarkThemeCommand { get; }
+        public ICommand SetCrazyThemeCommand { get; }
         #endregion
 
         // Design-time constructor
@@ -99,6 +164,7 @@ namespace BookShelf.ViewModels
             _dataAccess = dataAccess;
             _cartService = cartService;
             _navigationService = navigationService;
+            _themeManager = new ThemeManager();
             LoggedInUser = loggedInUser;
 
             ClearFiltersCommand = new RelayCommand(p => ClearFilters());
@@ -108,12 +174,69 @@ namespace BookShelf.ViewModels
             OpenAdminUsersCommand = new RelayCommand(p => _navigationService.ShowAdminUsers(LoggedInUser));
             OpenAdminOrdersCommand = new RelayCommand(p => _navigationService.ShowAdminOrders());
             LogoutCommand = new RelayCommand(p => Logout(p as Window));
-
-            // Initialize the new command
             ViewDetailsCommand = new RelayCommand(p => ViewBookDetails(), p => CanViewBookDetails());
 
+            // Theme commands
+            ToggleThemeCommand = new RelayCommand(p => ToggleTheme()); // Zadržano za kompatibilnost
+            SetLightThemeCommand = new RelayCommand(p => CurrentTheme = ThemeType.Light);
+            SetDarkThemeCommand = new RelayCommand(p => CurrentTheme = ThemeType.Dark);
+            SetCrazyThemeCommand = new RelayCommand(p => CurrentTheme = ThemeType.Crazy);
+
             LoadData();
+            LoadUserThemePreference(); // Učitaj korisničku preference teme
         }
+
+        #region Theme Management Methods
+
+        /// <summary>
+        /// Učitava korisničku preference teme iz baze podataka
+        /// </summary>
+        private void LoadUserThemePreference()
+        {
+            if (LoggedInUser != null)
+            {
+                // Učitaj najnovije podatke korisnika iz baze (uključujući PreferredTheme)
+                var userFromDb = _dataAccess.GetUserById(LoggedInUser.UserID);
+                if (userFromDb != null)
+                {
+                    LoggedInUser.PreferredTheme = userFromDb.PreferredTheme;
+
+                    // Postavi temu bez okidanja save metode
+                    _currentTheme = LoggedInUser.PreferredThemeType;
+                    OnPropertyChanged(nameof(CurrentTheme));
+                    OnPropertyChanged(nameof(IsLightTheme));
+                    OnPropertyChanged(nameof(IsDarkTheme));
+                    OnPropertyChanged(nameof(IsCrazyTheme));
+
+                    // Primeni temu
+                    _themeManager.SetTheme(_currentTheme);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Čuva korisničku preference teme u bazu podataka
+        /// </summary>
+        /// <param name="theme">Nova tema</param>
+        private void SaveThemePreference(ThemeType theme)
+        {
+            if (LoggedInUser != null)
+            {
+                try
+                {
+                    LoggedInUser.PreferredThemeType = theme;
+                    _dataAccess.UpdateUserThemePreference(LoggedInUser.UserID, theme.ToString());
+                }
+                catch (System.Exception ex)
+                {
+                    // Log greške ili prikaži poruku korisniku
+                    MessageBox.Show($"Could not save theme preference: {ex.Message}", "Warning",
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        #endregion
 
         // Methods for the new command
         private bool CanViewBookDetails() => SelectedBook != null;
@@ -122,6 +245,25 @@ namespace BookShelf.ViewModels
             _navigationService.ShowBookDetailsWindow(SelectedBook, LoggedInUser);
         }
 
+        private void ToggleTheme()
+        {
+            // Ciklično menjanje tema: Light -> Dark -> Crazy -> Light
+            switch (CurrentTheme)
+            {
+                case ThemeType.Light:
+                    CurrentTheme = ThemeType.Dark;
+                    break;
+                case ThemeType.Dark:
+                    CurrentTheme = ThemeType.Crazy;
+                    break;
+                case ThemeType.Crazy:
+                    CurrentTheme = ThemeType.Light;
+                    break;
+                default:
+                    CurrentTheme = ThemeType.Light;
+                    break;
+            }
+        }
 
         private bool CanAddToCart() => SelectedBook != null && SelectedBook.StockQuantity > 0;
         private void AddToCart()

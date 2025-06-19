@@ -19,13 +19,16 @@
 		<SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
 		<SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
 		<SolidColorBrush x:Key="DangerBrush" Color="#E74C3C"/>
-		<SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFFF"/>
-		<SolidColorBrush x:Key="SurfaceBrush" Color="#F8F9FA"/>
-		<SolidColorBrush x:Key="TextPrimaryBrush" Color="#2C3E50"/>
-		<SolidColorBrush x:Key="TextSecondaryBrush" Color="#7F8C8D"/>
-		<SolidColorBrush x:Key="BorderBrush" Color="#E5E5E5"/>
-		<SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
-		<SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/>
+        
+        
+        <!-- Theme-aware brushes that will be overridden by theme dictionaries -->
+        <SolidColorBrush x:Key="BackgroundBrush" Color="{DynamicResource PrimaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource SecondaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="{DynamicResource PrimaryTextColor}"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource SecondaryTextColor}"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}"/>
+        <SolidColorBrush x:Key="CardBrush" Color="{DynamicResource PrimaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="HoverBrush" Color="#F1F2F6"/>
 
 		<!-- Modern Button Styles -->
 		<Style x:Key="ModernButton" TargetType="Button">
