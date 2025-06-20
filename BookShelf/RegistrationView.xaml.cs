@@ -6,9 +6,6 @@ using BookShelf.ViewModels;
 
 namespace BookShelf.Views
 {
-    /// <summary>
-    /// Interaction logic for RegistrationView.xaml
-    /// </summary>
     public partial class RegistrationView : Window
     {
         public RegistrationView(DataAccess dataAccess, NavigationService navigationService)
@@ -19,7 +16,7 @@ namespace BookShelf.Views
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); // Closes the current window
+            this.Close();
         }
 
 

@@ -5,9 +5,6 @@ using System.Windows;
 
 namespace BookShelf.Views
 {
-    /// <summary>
-    /// Interaction logic for AdminOrdersView.xaml
-    /// </summary>
     public partial class AdminOrdersView : Window
     {
         public AdminOrdersView()
@@ -22,7 +19,7 @@ namespace BookShelf.Views
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); // Closes the current window
+            this.Close();
         }
     }
 }

@@ -7,9 +7,6 @@ using BookShelf.ViewModels;
 
 namespace BookShelf.Views
 {
-    /// <summary>
-    /// Interaction logic for ShoppingCartView.xaml
-    /// </summary>
     public partial class ShoppingCartView : Window
     {
         public ShoppingCartView(DataAccess dataAccess, ShoppingCartService cartService, User currentUser)
@@ -19,7 +16,7 @@ namespace BookShelf.Views
         }
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); // Closes the current window
+            this.Close(); 
         }
     }
 }
