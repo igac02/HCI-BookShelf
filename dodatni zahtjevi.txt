@@ -1,0 +1,15 @@
+Implementirani su sljedeci dodatni zahtjevi:
+
+
+▪ Podrška za različite tipove (barem dva) korisničkih naloga
+(npr. administrator, referent i slično).
+
+▪ Korisnička podešavanja. Definisati nekoliko (minimalno tri)
+različitih tema/stilova (sa različitim kombinacijama boja, fontova i dr.) te
+omogućiti korisniku da bira preferiranu temu/stil. Sistem treba da pamti
+korisnikov odabir te da isti primijeni kada se korisnik prijavi na sistem.
+
+▪ Korisničko uputstvo. Napisati uputstvo za korištenje aplikacije
+za krajnjeg korisnika. Korisničko uputstvo treba da bude u PDF formatu i
+izgenerisano iz README.md fajla javnog repozitorijuma projekta koji je
+dostupan na GitHub platformi.
